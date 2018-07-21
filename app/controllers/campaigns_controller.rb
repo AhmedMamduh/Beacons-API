@@ -3,7 +3,6 @@ class CampaignsController < ApplicationController
 
   def index
      @campaigns = Campaign.all
-
      render json: { satuts: 'SUCCESS', message: 'Campaigns Loaded', data: @campaigns }
   end
 
@@ -34,8 +33,8 @@ class CampaignsController < ApplicationController
   end
 
   def destroy
-     @campaign.destroy
-     render json: { message: 'Campaign deleted', data: @campaign }, status: :ok
+      @campaign.destroy
+      render json: { message: 'Campaign deleted', data: @campaign }, status: :ok
   end
 
   private

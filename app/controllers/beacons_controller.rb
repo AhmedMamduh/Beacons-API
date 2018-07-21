@@ -8,6 +8,7 @@ class BeaconsController < ApplicationController
 
   def show
     if @campaign.enabled?
+    #if Date.today < @campaign.end_time?
     render json: { message: 'Campaign loaded for your beacon', data: @campaign }, status: :ok
     else
     render json: {message: 'Campaign has ended'}
@@ -39,8 +40,8 @@ class BeaconsController < ApplicationController
   private
 
     def find_beacon
-      @beacon = Beacon.find_by_major_and_minor(params[:major], params[:minor])
-      @campaign = Campaign.find_by_beacon_id(@beacon)
+       @beacon = Beacon.find_by_major_and_minor(params[:major], params[:minor])
+       @campaign = Campaign.find_by_beacon_id(@beacon)
     end
 
     def beacon_params
