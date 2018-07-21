@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  description: MyText
+  start_time: 2018-07-21 19:10:49
+  end_time: 2018-07-21 19:10:49
+  enabled: false
+  beacon: one
+
+two:
+  name: MyString
+  description: MyText
+  start_time: 2018-07-21 19:10:49
+  end_time: 2018-07-21 19:10:49
+  enabled: false
+  beacon: two
