@@ -1,51 +1,49 @@
 class BeaconsController < ApplicationController
-  before_action :set_beacon, only: [:show, :update, :destroy]
+  before_action :find_beacon, only: [:show, :update, :destroy]
 
-  # GET /beacons
   def index
     @beacons = Beacon.all
-
-    render json: @beacons
+    render json: { satuts: 'SUCCESS', message: 'Beacons Loaded', data: @beacons }
   end
 
-  # GET /beacons/1
   def show
-    render json: @beacon
+    if @campaign.enabled?
+    render json: { message: 'Campaign loaded for your beacon', data: @campaign }, status: :ok
+    else
+    render json: {message: 'Campaign has ended'}
+    end
   end
 
-  # POST /beacons
   def create
     @beacon = Beacon.new(beacon_params)
-
     if @beacon.save
-      render json: @beacon, status: :created, location: @beacon
+      render json: { message: 'Beacon saved', data: @beacon }, status: :ok
     else
-      render json: @beacon.errors, status: :unprocessable_entity
+      render json: { message: 'Beacon not saved', data: @beacon.errors }, status: :unprocessable_entity
     end
   end
 
-  # PATCH/PUT /beacons/1
   def update
     if @beacon.update(beacon_params)
-      render json: @beacon
+       render json: { message: 'Beacon updated', data: @beacon }, status: :ok
     else
-      render json: @beacon.errors, status: :unprocessable_entity
+       render json: { message: 'Beacon not updated', data: @beacon.errors }, status: :unprocessable_entity
     end
   end
 
-  # DELETE /beacons/1
   def destroy
-    @beacon.destroy
+      @beacon.destroy
+      render json: { message: 'Beacon deleted', data: @beacon }, status: :ok
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_beacon
-      @beacon = Beacon.find(params[:id])
+
+    def find_beacon
+      @beacon = Beacon.find_by_major_and_minor(params[:major], params[:minor])
+      @campaign = Campaign.find_by_beacon_id(@beacon)
     end
 
-    # Only allow a trusted parameter "white list" through.
     def beacon_params
-      params.require(:beacon).permit(:name, :major, :minor, :latitude, :longitude)
+       params.require(:beacon).permit(:name, :major, :minor)
     end
 end

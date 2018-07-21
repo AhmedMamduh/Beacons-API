@@ -1,51 +1,50 @@
 class CampaignsController < ApplicationController
-  before_action :set_campaign, only: [:show, :update, :destroy]
+  before_action :find_campaign, only: [:show, :update, :destroy]
 
-  # GET /campaigns
   def index
-    @campaigns = Campaign.all
+     @campaigns = Campaign.all
 
-    render json: @campaigns
+     render json: { satuts: 'SUCCESS', message: 'Campaigns Loaded', data: @campaigns }
   end
 
-  # GET /campaigns/1
   def show
-    render json: @campaign
-  end
-
-  # POST /campaigns
-  def create
-    @campaign = Campaign.new(campaign_params)
-
-    if @campaign.save
-      render json: @campaign, status: :created, location: @campaign
+    if @campaign.enabled?
+     #if Date.today < @campaign.end_time?
+     render json: { message: 'Loaded Campaign', data: @campaign }, status: :ok
     else
-      render json: @campaign.errors, status: :unprocessable_entity
+     render json: { message: 'Campaign has ended' }
     end
   end
 
-  # PATCH/PUT /campaigns/1
+  def create
+     @campaign = Campaign.new(campaign_params)
+    if @campaign.save
+       render json: { message: 'Campaign saved', data: @campaign }, status: :ok
+    else
+       render json: { message: 'Campaign not saved', data: @campaign.errors }, status: :unprocessable_entity
+    end
+  end
+
   def update
     if @campaign.update(campaign_params)
-      render json: @campaign
+       render json: { message: 'Campaign updated', data: @campaign }, status: :ok
     else
-      render json: @campaign.errors, status: :unprocessable_entity
+       render json: { message: 'Campaign not updated', data: @campaign.errors }, status: :unprocessable_entity
     end
   end
 
-  # DELETE /campaigns/1
   def destroy
-    @campaign.destroy
+     @campaign.destroy
+     render json: { message: 'Campaign deleted', data: @campaign }, status: :ok
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_campaign
-      @campaign = Campaign.find(params[:id])
+
+    def find_campaign
+       @campaign = Campaign.find(params[:id])
     end
 
-    # Only allow a trusted parameter "white list" through.
     def campaign_params
-      params.require(:campaign).permit(:name, :description, :start_time, :end_time, :enabled, :beacon_id)
+       params.require(:campaign).permit(:name, :description, :start_time, :end_time, :enabled, :beacon_id)
     end
 end

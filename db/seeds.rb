@@ -1,7 +1,15 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+5.times do
+beacon1 = Beacon.create(
+	name: Faker::Appliance.equipment,
+	major: Faker::Number.between(500, 800),
+	minor: Faker::Number.between(100, 400),
+	latitude: Faker::Address.latitude,
+	longitude: Faker::Address.longitude)
+
+campaign1 = beacon1.campaigns.create(
+	name: Faker::Appliance.brand,
+	description: Faker::Address.full_address,
+	start_time: Faker::Time.between(DateTime.now - 4, DateTime.now),
+	end_time: Faker::Time.between(DateTime.now - 1, DateTime.now + 6),
+	enabled: Faker::Boolean.boolean)
+end

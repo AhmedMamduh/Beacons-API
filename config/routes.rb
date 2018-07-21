@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  resources :campaigns
-  resources :beacons
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+resources :campaigns
+  resource :beacons do
+    resource :beacons_items
+  end 
+root 'beacons#index'
 end
